@@ -81,27 +81,27 @@ public class Project02 {
     }
     static int ave(Elevator e) {
         int a = 0;
-        for(int i = 0; i < e.passengerList.size(); i++) {
-            a += e.passengerList.get(i).ticks;
+        for(int i = 0; i < e.allPassengers.size(); i++) {
+            a += e.allPassengers.get(i).ticks;
         }
-        return a/e.passengerList.size();
+        return a/e.allPassengers.size();
     }
 
     static int min(Elevator e) {
-        int a = e.passengerList.get(0).ticks;
-        for(int i = 1; i < e.passengerList.size(); i++) {
-            if (e.passengerList.get(i).ticks < a) {
-                a = e.passengerList.get(i).ticks;
+        int a = e.allPassengers.get(0).ticks;
+        for(int i = 1; i < e.allPassengers.size(); i++) {
+            if (e.allPassengers.get(i).ticks < a) {
+                a = e.allPassengers.get(i).ticks;
             }
         }
         return a;
     }
 
     static int max(Elevator e) {
-        int a = e.passengerList.get(0).ticks;
-        for(int i = 1; i < e.passengerList.size(); i++) {
-            if (e.passengerList.get(i).ticks > a) {
-                a = e.passengerList.get(i).ticks;
+        int a = e.allPassengers.get(0).ticks;
+        for(int i = 1; i < e.allPassengers.size(); i++) {
+            if (e.allPassengers.get(i).ticks > a) {
+                a = e.allPassengers.get(i).ticks;
             }
         }
         return a;
@@ -116,7 +116,7 @@ public class Project02 {
         int countDistance = 0;
         while(currTicks <= duration) {
             double rDub = rand.nextDouble(1);
-            if (rDub < passengers) {
+            if (rDub < passengers * f.size() && currFloor < f.size()) {
                 Passenger p = new Passenger(currFloor, f.size());
                 f.get(currFloor).addToList(p);
                 System.out.println("Passenger added: " + p.floorFrom + " " + p.floorOff);
@@ -133,6 +133,7 @@ public class Project02 {
                         System.out.println("Passenger removed: " + e.passengerList.get(i).floorFrom + " " + e.passengerList.get(i).floorOff);
                         e.passengerList.get(i).end = currTicks;
                         e.passengerList.get(i).setTicks();
+                        e.allPassengers.add(e.passengerList.get(i));
                         e.takeOutPassenger(e.passengerList.get(i));
                         currTicks++;
                     }
@@ -164,7 +165,6 @@ public class Project02 {
                     countDistance = 0;
                 }
             }
-            //System.out.println("ticks: " + currTicks);
         }
     }
 }
@@ -181,6 +181,7 @@ class Elevator {
     int currCap;
     boolean up = true;
     List<Passenger> passengerList;
+    List<Passenger> allPassengers;
 
     int startFloor = 1;
     int endFloor;
@@ -193,9 +194,11 @@ class Elevator {
         cap = e;
         if(s.equals("linked")) {
             this.passengerList = new LinkedList<>();
+            this.allPassengers = new LinkedList<>();
         }
         else if (s.equals("array")) {
             this.passengerList = new ArrayList<>();
+            this.allPassengers = new LinkedList<>();
         }
     }
 
